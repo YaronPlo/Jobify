@@ -1,0 +1,21 @@
+{
+	"name": "server",
+	"version": "1.0.0",
+	"description": "Jobify Server",
+	"main": "index.js",
+	"type": "module",
+	"scripts": {
+		"start": "nodemon server"
+	},
+	"keywords": [],
+	"author": "Yaron Plotkin",
+	"license": "ISC",
+	"devDependencies": {
+		"nodemon": "^2.0.20"
+	},
+	"dependencies": {
+		"dotenv": "^16.0.3",
+		"express": "^4.18.2",
+		"mongoose": "^6.9.1"
+	}
+}
