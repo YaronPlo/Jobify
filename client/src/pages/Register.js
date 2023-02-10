@@ -3,20 +3,23 @@ import { Alert, FormRow, Logo } from "../components";
 import Wrapper from "../assets/wrappers/RegisterPage";
 import { useAppContext } from "../context/appContext";
 import imgLogo from "../assets/images/logo.svg";
+import { useNavigate } from "react-router-dom";
 
 const initialState = {
 	name: "",
 	email: "",
 	password: "",
-	isMemeber: true,
+	isMember: true,
 };
 
 const Register = () => {
-	const { isLoading, showAlert, displayAlert } = useAppContext();
+	const navigate = useNavigate();
+	const { user, isLoading, showAlert, displayAlert, registerUser } =
+		useAppContext();
 	const [values, setValues] = useState(initialState);
 
 	const toggleMember = () => {
-		setValues({ ...values, isMemeber: !values?.isMemeber });
+		setValues({ ...values, isMember: !values?.isMember });
 	};
 
 	const handleChange = (e) => {
@@ -25,20 +28,35 @@ const Register = () => {
 
 	const onSubmit = (e) => {
 		e.preventDefault();
-		const { name, email, password, isMemeber } = values;
-		if (!email || !password || (!isMemeber && !name)) {
+		const { name, email, password, isMember } = values;
+		if (!email || !password || (!isMember && !name)) {
 			displayAlert();
 			return;
 		}
+		const currentUser = { name, email, password };
+
+		if (isMember) {
+			console.log("already a member");
+		} else {
+			registerUser(currentUser);
+		}
 	};
+
+	useEffect(() => {
+		if (user) {
+			setTimeout(() => {
+				navigate("/");
+			}, 3000);
+		}
+	}, [user, navigate]);
 
 	return (
 		<Wrapper className="full-page">
 			<form className="form" onSubmit={onSubmit}>
 				<Logo logoSrc={imgLogo} alt="Jobify" className="logo" />
-				<h3>{values.isMemeber ? "Login" : "Register"}</h3>
+				<h3>{values.isMember ? "Login" : "Register"}</h3>
 				{showAlert && <Alert />}
-				{!values.isMemeber && (
+				{!values.isMember && (
 					<FormRow
 						type="text"
 						name="name"
@@ -61,13 +79,13 @@ const Register = () => {
 					handleChange={handleChange}
 					labelText="Password"
 				/>
-				<button className="btn btn-block" type="submit">
+				<button className="btn btn-block" type="submit" disabled={isLoading}>
 					Submit
 				</button>
 				<p>
-					{values.isMemeber ? "Not a member yet?" : "Already a member?"}
+					{values.isMember ? "Not a member yet?" : "Already a member?"}
 					<button className="member-btn" type="button" onClick={toggleMember}>
-						Register
+						{values.isMember ? "Register" : "Login"}
 					</button>
 				</p>
 			</form>
