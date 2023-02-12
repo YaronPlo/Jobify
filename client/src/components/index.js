@@ -1,6 +1,6 @@
-export { default as Logo } from "./Logo/Logo";
-export { default as FormRow } from "./FormRow/FormRow";
-export { default as Alert } from "./Alert/Alert";
-export { default as Navbar } from "./Navbar/Navbar";
-export { default as BigSidebar } from "./BigSidebar/BigSidebar";
-export { default as SmallSidebar } from "./SmallSidebar/SmallSidebar";
+export { default as Logo } from "./Logo";
+export { default as FormRow } from "./FormRow";
+export { default as Alert } from "./Alert";
+export { default as Navbar } from "./Navbar";
+export { default as BigSidebar } from "./BigSidebar";
+export { default as SmallSidebar } from "./SmallSidebar";

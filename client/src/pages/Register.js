@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { Alert, FormRow, Logo } from "../components";
 import Wrapper from "../assets/wrappers/RegisterPage";
 import { useAppContext } from "../context/appContext";
-import imgLogo from "../assets/images/logo.svg";
 import { useNavigate } from "react-router-dom";
 
 const initialState = {
@@ -61,7 +60,7 @@ const Register = () => {
 	return (
 		<Wrapper className="full-page">
 			<form className="form" onSubmit={onSubmit}>
-				<Logo logoSrc={imgLogo} alt="Jobify" className="logo" />
+				<Logo />
 				<h3>{values.isMember ? "Login" : "Register"}</h3>
 				{showAlert && <Alert />}
 				{!values.isMember && (

@@ -7,7 +7,6 @@ import React from "react";
 const Landing = () => {
 	return (
 		<React.Fragment>
-			{/* <Navigate to="/" /> */}
 			<Wrapper>
 				<nav>
 					<Logo />
