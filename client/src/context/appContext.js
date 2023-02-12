@@ -46,20 +46,24 @@ const AppProvider = ({ children }) => {
 		}, 3000);
 	};
 
-	const registerUser = async (currUser) => {
-		dispatch({ type: actions.REGISTER_USER_BEGIN });
+	const setupUser = async ({ currentUser, endPoint, alertText }) => {
+		dispatch({ type: actions.SETUP_USER_BEGIN });
 		try {
-			const response = await axios.post(`${apiV1}/auth/register`, currUser);
-			const { user, token, location } = response.data;
+			console.log(currentUser);
+			const { data } = await axios.post(
+				`${apiV1}/auth/${endPoint}`,
+				currentUser
+			);
+			const { user, token, location } = data;
 
 			dispatch({
-				type: actions.REGISTER_USER_SUCCESS,
-				payload: { user, token, location },
+				type: actions.SETUP_USER_SUCCESS,
+				payload: { user, token, location, alertText },
 			});
 			addUserToLocalStorage({ user, token, location });
 		} catch (error) {
 			dispatch({
-				type: actions.REGISTER_USER_ERROR,
+				type: actions.SETUP_USER_ERROR,
 				payload: { msg: error.response.data.msg },
 			});
 		}
@@ -67,7 +71,7 @@ const AppProvider = ({ children }) => {
 	};
 
 	return (
-		<AppContext.Provider value={{ ...state, displayAlert, registerUser }}>
+		<AppContext.Provider value={{ ...state, displayAlert, setupUser }}>
 			{children}
 		</AppContext.Provider>
 	);

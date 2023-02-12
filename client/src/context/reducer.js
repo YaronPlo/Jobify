@@ -7,16 +7,19 @@ const reducer = (state, action) => {
 			alertType: "danger",
 			alertText: "Please provide all values!",
 		};
-	} else if (action.type === actions.CLEAR_ALERT) {
+	}
+	if (action.type === actions.CLEAR_ALERT) {
 		return {
 			...state,
 			showAlert: false,
 			alertType: "",
 			alertText: "",
 		};
-	} else if (action.type === actions.REGISTER_USER_BEGIN) {
+	}
+	if (action.type === actions.SETUP_USER_BEGIN) {
 		return { ...state, isLoading: true };
-	} else if (action.type === actions.REGISTER_USER_SUCCESS) {
+	}
+	if (action.type === actions.SETUP_USER_SUCCESS) {
 		return {
 			...state,
 			isLoading: false,
@@ -26,9 +29,10 @@ const reducer = (state, action) => {
 			jobLocation: action.payload.location,
 			showAlert: true,
 			alertType: "success",
-			alertText: "User Created! Redirecting...",
+			alertText: action.payload.alertText,
 		};
-	} else if (action.type === actions.REGISTER_USER_ERROR) {
+	}
+	if (action.type === actions.SETUP_USER_ERROR) {
 		return {
 			...state,
 			isLoading: false,
