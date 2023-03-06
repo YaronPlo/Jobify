@@ -16,6 +16,7 @@ const initialState = {
 	token,
 	userLocation: userLocation || "",
 	jobLocation: userLocation || "",
+	showSidebar: false,
 };
 
 const AppContext = createContext();
@@ -29,7 +30,7 @@ const AppProvider = ({ children }) => {
 		localStorage.setItem("location", location);
 	};
 
-	const removeUserToLocalStorage = ({ user, token, location }) => {
+	const removeUserToLocalStorage = () => {
 		localStorage.removeItem("user");
 		localStorage.removeItem("token");
 		localStorage.removeItem("location");
@@ -49,7 +50,6 @@ const AppProvider = ({ children }) => {
 	const setupUser = async ({ currentUser, endPoint, alertText }) => {
 		dispatch({ type: actions.SETUP_USER_BEGIN });
 		try {
-			console.log(currentUser);
 			const { data } = await axios.post(
 				`${apiV1}/auth/${endPoint}`,
 				currentUser
@@ -70,8 +70,19 @@ const AppProvider = ({ children }) => {
 		clearAlert();
 	};
 
+	const toggleSidebar = () => {
+		dispatch({ type: actions.TOGGLE_SIDEBAR });
+	};
+
+	const logoutUser = () => {
+		dispatch({ type: actions.LOGOUT_USER });
+		removeUserToLocalStorage();
+	};
+
 	return (
-		<AppContext.Provider value={{ ...state, displayAlert, setupUser }}>
+		<AppContext.Provider
+			value={{ ...state, displayAlert, setupUser, toggleSidebar, logoutUser }}
+		>
 			{children}
 		</AppContext.Provider>
 	);
