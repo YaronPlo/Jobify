@@ -13,7 +13,7 @@ const initialState = {
 	alertText: "",
 	alertType: "",
 	user: user ? JSON.parse(user) : null,
-	token,
+	token: token,
 	userLocation: userLocation || "",
 	jobLocation: userLocation || "",
 	showSidebar: false,
@@ -21,8 +21,36 @@ const initialState = {
 
 const AppContext = createContext();
 const apiV1 = "/api/v1";
+
 const AppProvider = ({ children }) => {
 	const [state, dispatch] = useReducer(reducer, initialState);
+
+	//Axios instance
+	const authFetch = axios.create({
+		baseURL: `${apiV1}/auth`,
+	});
+	//req
+	authFetch.interceptors.request.use(
+		(config) => {
+			config.headers["Authorization"] = `Bearer ${state.token}`;
+			return config;
+		},
+		(error) => {
+			return Promise.reject(error);
+		}
+	);
+
+	//res
+	authFetch.interceptors.response.use(
+		(response) => {
+			return response;
+		},
+		(error) => {
+			console.log(error.response);
+			if (error.response.status === 401) console.log("AUTH ERROR");
+			return Promise.reject(error);
+		}
+	);
 
 	const addUserToLocalStorage = ({ user, token, location }) => {
 		localStorage.setItem("user", JSON.stringify(user));
@@ -79,9 +107,39 @@ const AppProvider = ({ children }) => {
 		removeUserToLocalStorage();
 	};
 
+	const updateUser = async ({ currentUser, alertText }) => {
+		dispatch({ type: actions.UPDATE_USER_BEGIN });
+		try {
+			const { data } = await authFetch.patch("/updateUser", currentUser);
+			const { user, location, token } = data;
+			dispatch({
+				type: actions.UPDATE_USER_SUCCESS,
+				payload: {
+					user,
+					location,
+					token,
+					alertText,
+				},
+			});
+			addUserToLocalStorage({ user, location, token });
+		} catch (error) {
+			dispatch({
+				type: actions.UPDATE_USER_ERROR,
+				payload: { msg: error.response.data.msg },
+			});
+		}
+	};
+
 	return (
 		<AppContext.Provider
-			value={{ ...state, displayAlert, setupUser, toggleSidebar, logoutUser }}
+			value={{
+				...state,
+				displayAlert,
+				setupUser,
+				toggleSidebar,
+				updateUser,
+				logoutUser,
+			}}
 		>
 			{children}
 		</AppContext.Provider>
